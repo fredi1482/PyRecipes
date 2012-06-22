@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?eclipse-pydev version="1.0"?>
+
+<pydev_project>
+<pydev_property name="org.python.pydev.PYTHON_PROJECT_INTERPRETER">Default</pydev_property>
+<pydev_property name="org.python.pydev.PYTHON_PROJECT_VERSION">python 2.6</pydev_property>
+<pydev_pathproperty name="org.python.pydev.PROJECT_SOURCE_PATH">
+<path>/DynHoLab/DynHoLab/DynKernel</path>
+<path>/DynHoLab/DynHoLab/DynCGNS</path>
+<path>/DynHoLab/DynHoLab/DynKnowledge</path>
+<path>/DynHoLab/DynHoLab/DynFactory</path>
+<path>/DynHoLab/DynHoLab/DynWrapper</path>
+<path>/DynHoLab/DynHoLab/DynTools</path>
+<path>/DynHoLab/DynHoLab/DynTools/</path>
+<path>/DynHoLab/DynHoLab/DynPluggins</path>
+</pydev_pathproperty>
+<pydev_pathproperty name="org.python.pydev.PROJECT_EXTERNAL_SOURCE_PATH">
+<path>../../workspace/DynHoLab/lib/python2.6/site-packages/</path>
+</pydev_pathproperty>
+</pydev_project>
