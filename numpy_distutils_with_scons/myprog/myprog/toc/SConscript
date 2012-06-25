@@ -1,0 +1,22 @@
+#!/usr/bin/env python
+
+# Get environment -------------------------------------------------------------
+
+Import('env')
+
+# Define subpackage and files -------------------------------------------------
+
+subpackage = 'toc'
+
+src = ['Fortran/hello.f90',
+      ]
+
+# Work to do ------------------------------------------------------------------
+
+prepro_src = list()
+for s in src:
+    prepro_src.append(env.PREPRO(s))
+env.F2PY(target = 'f_toc.so', source = prepro_src)
+
+###############################################################################
+# End of file DynKernel/lhs/SConscript

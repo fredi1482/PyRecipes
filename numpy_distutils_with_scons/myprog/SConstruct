@@ -1,0 +1,81 @@
+#!/usr/bin/env python
+
+# Import ----------------------------------------------------------------------
+import os
+import sys
+import re
+import shutil
+
+# Get config ------------------------------------------------------------------
+
+import conf
+config_file = ARGUMENTS.get('conf', None)
+m, rf = conf.get_config(config_file)
+
+# Define f2py_builder ---------------------------------------------------------
+
+def wrap_fortran(target, source, env):
+    # Target
+    t = str(target[0])
+    tpath, tn = os.path.split(t)
+    tn, text = os.path.splitext(tn)
+    #target = str(target[0]).split('/')[-1]
+    #target = target.split('.')[0].split('_')[-1]
+    # Source
+    s_str = ''
+    for s in source:
+        s_str += str(s) + ' '
+    source = s_str
+    if source == '': return None
+    # Options
+    build_dir = "--build-dir 'build/scons' "
+    fcompiler = "--fcompiler='gfortran' "
+    lower = "--lower "
+    quiet = '--quiet '
+    #options = fcompiler + build_dir + lower + quiet
+    options = fcompiler + lower + quiet + build_dir
+    # Generate action string
+    exec_str = 'f2py -m %s -c %s %s' % (tn, source, options)
+    print exec_str
+    os.system(exec_str)
+    if not os.path.exists(tpath): os.mkdirs(tpath)
+    shutil.move('%s.so' % tn, '%s' % tpath)
+    return None
+
+# Define scanner --------------------------------------------------------------
+
+include_re = re.compile(r'^.include\s+(\S+)$', re.M)
+
+def kfile_scan(node, env, path, arg):
+    contents = node.get_texte_contents()
+    return include_re.findall(contents)
+
+# Define prepro_builder ---------------------------------------------------------
+
+def prepro_fortran(target, source, env):
+    exec_str = 'cpp -traditional-cpp -P -C %s > %s' % (str(source[0]),
+                                                       str(target[0]))
+    os.system(exec_str)
+    return None
+
+# Get environment -------------------------------------------------------------
+
+env = Environment()
+
+f2py_builder = Builder(action = wrap_fortran)
+env.Append(BUILDERS = {'F2PY': f2py_builder})
+
+prepro_builder = Builder(action = prepro_fortran, prefix = 'p_', suffix = '.f90')
+env.Append(BUILDERS = {'PREPRO': prepro_builder})
+
+kscan = Scanner(function = kfile_scan, skeys = ['.h'])
+env.Append(SCANNERS = kscan)
+
+Export('env')
+
+# Specify work to do ----------------------------------------------------------
+
+SConscript('myprog/SConscript', variant_dir = 'build/scons/myprog', duplicate=0)
+
+###############################################################################
+# End of file SConstruct
